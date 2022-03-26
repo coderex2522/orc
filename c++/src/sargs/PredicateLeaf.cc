@@ -19,7 +19,7 @@
 #include "orc/BloomFilter.hh"
 #include "orc/Common.hh"
 #include "orc/Type.hh"
-#include "PredicateLeaf.hh"
+#include "orc/sargs/PredicateLeaf.hh"
 
 #include <algorithm>
 #include <functional>

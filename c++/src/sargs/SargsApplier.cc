@@ -122,4 +122,60 @@ namespace orc {
     return mHasSelected;
   }
 
+  bool SargsApplier::evaluateColumnStatistics(
+                                    const PbColumnStatistics& colStats) const {
+    const auto& leaves = mSearchArgument->getLeaves();
+    std::vector<TruthValue> leafValues(
+      leaves.size(), TruthValue::YES_NO_NULL);
+
+    for (size_t pred = 0; pred != leaves.size(); ++pred) {
+      if (leaves[pred].getColumnId() == INVALID_COLUMN_ID) {
+        // this column does not exist in current file
+        leafValues[pred] = TruthValue::YES_NO_NULL;
+      } else {
+        int colIdx = static_cast<int>(leaves[pred].getColumnId());
+        if (colStats.size() <= colIdx) {
+          // column stats does not exist
+          leafValues[pred] = TruthValue::YES_NO_NULL;
+        } else {
+          leafValues[pred] = leaves[pred].evaluate(mWriterVersion,
+                                                   colStats.Get(colIdx),
+                                                   nullptr);
+        }
+      }
+    }
+
+    return isNeeded(mSearchArgument->evaluate(leafValues));
+  }
+
+  bool SargsApplier::evaluateStripeStatistics(
+                            uint64_t rowsInStripe,
+                            const proto::StripeStatistics& stripeStats) {
+    if (stripeStats.colstats_size() == 0) {
+      return true;
+    }
+
+    bool ret = evaluateColumnStatistics(stripeStats.colstats());
+    if (!ret) {
+      // allocate evaluation result for row groups
+      uint64_t groupsInStripe =
+        (rowsInStripe + mRowIndexStride - 1) / mRowIndexStride;
+      mRowGroups.resize(groupsInStripe);
+      mTotalRowsInStripe = rowsInStripe;
+      std::fill(mRowGroups.begin(), mRowGroups.end(), false);
+    }
+    return ret;
+  }
+
+  bool SargsApplier::evaluateFileStatistics(const proto::Footer& footer) {
+    if (!mHasEvaluatedFileStats) {
+      if (footer.statistics_size() == 0) {
+        mFileStatsEvalResult = true;
+      } else {
+        mFileStatsEvalResult = evaluateColumnStatistics(footer.statistics());
+      }
+      mHasEvaluatedFileStats = true;
+    }
+    return mFileStatsEvalResult;
+  }
 }

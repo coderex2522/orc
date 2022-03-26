@@ -22,7 +22,7 @@
 #include "wrap/orc-proto-wrapper.hh"
 #include "ExpressionTree.hh"
 #include "orc/sargs/SearchArgument.hh"
-#include "sargs/PredicateLeaf.hh"
+#include "orc/sargs/PredicateLeaf.hh"
 
 #include <deque>
 #include <stdexcept>
@@ -48,7 +48,7 @@ namespace orc {
      * list will have the duplicates removed.
      * @return the list of leaf predicates
      */
-    const std::vector<PredicateLeaf>& getLeaves() const;
+    const std::vector<PredicateLeaf>& getLeaves() const override;
 
     /**
      * Get the expression tree. This should only needed for file formats that

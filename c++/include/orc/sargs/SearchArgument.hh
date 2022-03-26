@@ -21,6 +21,7 @@
 
 #include "orc/sargs/Literal.hh"
 #include "orc/sargs/TruthValue.hh"
+#include "orc/sargs/PredicateLeaf.hh"
 
 namespace orc {
 
@@ -36,6 +37,13 @@ namespace orc {
   class SearchArgument {
   public:
     virtual ~SearchArgument();
+
+    /**
+     * Get the leaf predicates that are required to evaluate the predicate. The
+     * list will have the duplicates removed.
+     * @return the list of leaf predicates
+     */
+    virtual const std::vector<PredicateLeaf>& getLeaves() const = 0;
 
     /**
      * Evaluate the entire predicate based on the values for the leaf predicates.
