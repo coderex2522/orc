@@ -17,7 +17,7 @@
  */
 
 #include "orc/Int128.hh"
-#include "Adaptor.hh"
+#include "orc/Adaptor.hh"
 
 #include <algorithm>
 #include <iomanip>

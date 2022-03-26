@@ -18,7 +18,7 @@
 
 #include "orc/OrcFile.hh"
 
-#include "Adaptor.hh"
+#include "orc/Adaptor.hh"
 #include "ToolTest.hh"
 
 #include "wrap/gmock.h"

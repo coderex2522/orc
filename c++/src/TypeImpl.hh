@@ -21,7 +21,7 @@
 
 #include "orc/Type.hh"
 
-#include "Adaptor.hh"
+#include "orc/Adaptor.hh"
 #include "wrap/orc-proto-wrapper.hh"
 
 #include <vector>

@@ -15,7 +15,7 @@
 #ifndef CODED_STREAM_WRAPPER_HH
 #define CODED_STREAM_WRAPPER_HH
 
-#include "Adaptor.hh"
+#include "orc/Adaptor.hh"
 
 DIAGNOSTIC_PUSH
 

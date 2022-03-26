@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-#include "Adaptor.hh"
+#include "orc/Adaptor.hh"
 #include "Murmur3.hh"
 
 #define ROTL64(x, r) ((x << r) | (x >> (64 - r)))

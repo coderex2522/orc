@@ -19,7 +19,7 @@
 #include "orc/ColumnPrinter.hh"
 #include "orc/OrcFile.hh"
 
-#include "Adaptor.hh"
+#include "orc/Adaptor.hh"
 #include "gzip.hh"
 #include "ToolTest.hh"
 

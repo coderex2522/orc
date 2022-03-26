@@ -19,7 +19,7 @@
 #include "orc/ColumnPrinter.hh"
 #include "orc/orc-config.hh"
 
-#include "Adaptor.hh"
+#include "orc/Adaptor.hh"
 
 #include <limits>
 #include <sstream>

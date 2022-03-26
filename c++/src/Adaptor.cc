@@ -16,7 +16,7 @@
 * limitations under the License.
 */
 
-#include "Adaptor.hh"
+#include "orc/Adaptor.hh"
 #include <sstream>
 #include <iomanip>
 

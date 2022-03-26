@@ -19,7 +19,7 @@
 #ifndef ORC_RLEV2_HH
 #define ORC_RLEV2_HH
 
-#include "Adaptor.hh"
+#include "orc/Adaptor.hh"
 #include "orc/Exceptions.hh"
 #include "RLE.hh"
 

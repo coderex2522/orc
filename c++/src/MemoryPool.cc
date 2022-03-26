@@ -19,7 +19,7 @@
 #include "orc/Int128.hh"
 #include "orc/MemoryPool.hh"
 
-#include "Adaptor.hh"
+#include "orc/Adaptor.hh"
 
 #include <cstdlib>
 #include <iostream>

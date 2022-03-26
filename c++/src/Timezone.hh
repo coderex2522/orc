@@ -21,7 +21,7 @@
 
 // This file is for timezone routines.
 
-#include "Adaptor.hh"
+#include "orc/Adaptor.hh"
 
 #include <memory>
 #include <stdexcept>

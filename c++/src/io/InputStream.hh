@@ -19,7 +19,7 @@
 #ifndef ORC_INPUTSTREAM_HH
 #define ORC_INPUTSTREAM_HH
 
-#include "Adaptor.hh"
+#include "orc/Adaptor.hh"
 #include "orc/OrcFile.hh"
 #include "wrap/zero-copy-stream-wrapper.h"
 

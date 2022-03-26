@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-#include "Adaptor.hh"
+#include "orc/Adaptor.hh"
 #include "Timezone.hh"
 #include "wrap/gtest-wrapper.h"
 

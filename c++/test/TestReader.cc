@@ -21,7 +21,7 @@
 #include "orc/Reader.hh"
 #include "Reader.hh"
 
-#include "Adaptor.hh"
+#include "orc/Adaptor.hh"
 #include "MemoryInputStream.hh"
 #include "MemoryOutputStream.hh"
 

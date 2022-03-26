@@ -21,7 +21,7 @@
 
 #include "orc/OrcFile.hh"
 
-#include "Adaptor.hh"
+#include "orc/Adaptor.hh"
 
 namespace orc {
 

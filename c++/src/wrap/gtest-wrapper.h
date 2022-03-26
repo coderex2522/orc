@@ -15,7 +15,7 @@
 #ifndef GTEST_WRAPPER_H
 #define GTEST_WRAPPER_H
 
-#include "Adaptor.hh"
+#include "orc/Adaptor.hh"
 
 // we need to disable a whole set of warnings as we include gtest.h
 // restore most of the warnings after the file is loaded.

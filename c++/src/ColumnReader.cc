@@ -18,7 +18,7 @@
 
 #include "orc/Int128.hh"
 
-#include "Adaptor.hh"
+#include "orc/Adaptor.hh"
 #include "ByteRLE.hh"
 #include "ColumnReader.hh"
 #include "orc/Exceptions.hh"

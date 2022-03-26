@@ -19,7 +19,7 @@
 #include "orc/OrcFile.hh"
 #include "orc/Reader.hh"
 
-#include "Adaptor.hh"
+#include "orc/Adaptor.hh"
 
 #include "wrap/gmock.h"
 #include "wrap/gtest-wrapper.h"

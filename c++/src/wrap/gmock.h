@@ -18,7 +18,7 @@
 // we need to disable a whole set of warnings as we include gtest.h
 // restore most of the warnings after the file is loaded.
 
-#include "Adaptor.hh"
+#include "orc/Adaptor.hh"
 
 DIAGNOSTIC_PUSH
 

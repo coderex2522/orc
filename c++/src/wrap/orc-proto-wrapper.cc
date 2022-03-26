@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-#include "Adaptor.hh"
+#include "orc/Adaptor.hh"
 
 #if defined(__GNUC__) || defined(__clang__)
   DIAGNOSTIC_IGNORE("-Warray-bounds")

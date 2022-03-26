@@ -18,7 +18,7 @@
 
 #include "orc/Vector.hh"
 
-#include "Adaptor.hh"
+#include "orc/Adaptor.hh"
 #include "orc/Exceptions.hh"
 
 #include <iostream>
