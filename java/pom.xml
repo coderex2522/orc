@@ -77,12 +77,12 @@
     <zookeeper.version>3.8.0</zookeeper.version>
     <maven.version>3.8.6</maven.version>
     <maven-assembly-plugin.version>3.4.2</maven-assembly-plugin.version>
-    <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
+    <maven-shade-plugin.version>3.3.0</maven-shade-plugin.version>
     <slf4j.version>1.7.36</slf4j.version>
     <protoc.artifact>com.google.protobuf:protoc:2.5.0</protoc.artifact>
     <surefire.version>3.0.0-M5</surefire.version>
     <junit.version>5.9.0</junit.version>
-    <mockito.version>4.6.1</mockito.version>
+    <mockito.version>4.7.0</mockito.version>
     <checkstyle.version>10.3.2</checkstyle.version>
   </properties>
 
@@ -329,6 +329,7 @@
               <exclude>**/target/**</exclude>
               <exclude>.idea/**</exclude>
               <exclude>**/*.iml</exclude>
+              <exclude>**/dependency-reduced-pom.xml</exclude>
             </excludes>
           </configuration>
         </plugin>
@@ -532,9 +533,9 @@
         <jdk>[17,)</jdk>
       </activation>
       <properties>
-        <min.hadoop.version>3.3.3</min.hadoop.version>
-        <hadoop.version>3.3.3</hadoop.version>
-        <tools.hadoop.version>3.3.3</tools.hadoop.version>
+        <min.hadoop.version>3.3.4</min.hadoop.version>
+        <hadoop.version>3.3.4</hadoop.version>
+        <tools.hadoop.version>3.3.4</tools.hadoop.version>
       </properties>
     </profile>
     <profile>
@@ -838,7 +839,7 @@
       <dependency>
         <groupId>org.threeten</groupId>
         <artifactId>threeten-extra</artifactId>
-        <version>1.7.0</version>
+        <version>1.7.1</version>
       </dependency>
 
       <!-- test inter-project -->
@@ -881,7 +882,7 @@
       <dependency>
         <groupId>net.bytebuddy</groupId>
         <artifactId>byte-buddy</artifactId>
-        <version>1.12.12</version>
+        <version>1.12.13</version>
         <scope>test</scope>
       </dependency>
       <dependency>
