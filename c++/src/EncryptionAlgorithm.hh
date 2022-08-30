@@ -36,7 +36,8 @@ public:
     virtual void encrypt(const DataBuffer<char>& input,
                          DataBuffer<char>& encryptedOutput) = 0;
 
-    static std::unique_ptr<Cipher> createInstance(const EncryptionOptions& options);
+    static std::unique_ptr<Cipher> createInstance(
+                         const EncryptionOptions& options);
 };
 
 class CryptoUtils {
@@ -53,8 +54,6 @@ public:
   static const uint64_t MAX_STRIPE = 0xffffff;
   static const uint64_t MAX_COLUMN = 0xffffff;
   static const int MAX_KIND = 0xffff;
-
-  static std::string getErrorString();
 
   static void clearCounter(unsigned char* iv); 
 

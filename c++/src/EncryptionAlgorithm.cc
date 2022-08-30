@@ -42,12 +42,6 @@ const EncryptionAlgorithm* EncryptionAlgorithm::AES_CTR_256() {
   return &encryptionAlgorithm;
 }
 
-std::string CryptoUtils::getErrorString() {
-  // void ERR_print_errors_cb(
-  // int (*cb)(const char *str, size_t len, void *u), void *u)
-  return "hello";
-}
-
 void CryptoUtils::clearCounter(unsigned char* iv) {
   int offset = COLUMN_ID_LENGTH + KIND_LENGTH + STRIPE_ID_LENGTH;
   memset(iv + offset, 0, IV_LENGTH - offset);
@@ -58,9 +52,12 @@ void CryptoUtils::modifyIvForStripe(uint64_t stripeIndex,
   if (stripeIndex < 1 || stripeIndex > MAX_STRIPE) {
     throw std::logic_error("stripe index out of range");
   }
-  iv[COLUMN_ID_LENGTH + KIND_LENGTH] = (unsigned char) (stripeIndex & 0xff0000);
-  iv[COLUMN_ID_LENGTH + KIND_LENGTH + 1] = (unsigned char) (stripeIndex & 0xff00);
-  iv[COLUMN_ID_LENGTH + KIND_LENGTH + 2] = (unsigned char) (stripeIndex & 0xff);
+  iv[COLUMN_ID_LENGTH + KIND_LENGTH] =
+    static_cast<unsigned char> (stripeIndex >> 16);
+  iv[COLUMN_ID_LENGTH + KIND_LENGTH + 1] =
+    static_cast<unsigned char> (stripeIndex >> 8);
+  iv[COLUMN_ID_LENGTH + KIND_LENGTH + 2] =
+    static_cast<unsigned char> (stripeIndex);
   clearCounter(iv);
 }
 
@@ -68,12 +65,22 @@ void CryptoUtils::modifyIvForStream(uint64_t columnId,
                                     StreamKind kind,
                                     uint64_t stripeIndex,
                                     unsigned char* iv) {
+  if (columnId > MAX_COLUMN) {
+    throw std::logic_error("ORC encryption is limited to " +
+                           std::to_string(MAX_COLUMN) +
+                           " columns. Value = " + std::to_string(columnId));
+  }
   int k = static_cast<int>(kind);
-  iv[0] = (unsigned char) (columnId & 0xff0000);
-  iv[1] = (unsigned char) (columnId & 0xff00);
-  iv[2] = (unsigned char) (columnId & 0xff);
-  iv[COLUMN_ID_LENGTH] = (unsigned char) (k & 0xff00);
-  iv[COLUMN_ID_LENGTH + 1] = (unsigned char) (k & 0xff);
+  if (k < 0 || k > MAX_KIND) {
+    throw std::logic_error("ORC encryption is limited to " +
+                           std::to_string(MAX_KIND) +
+                           " stream kinds. Value = " + std::to_string(k));
+  }
+  iv[0] = static_cast<unsigned char> (columnId >> 16);
+  iv[1] = static_cast<unsigned char> (columnId >> 8);
+  iv[2] = static_cast<unsigned char> (columnId);
+  iv[COLUMN_ID_LENGTH] = static_cast<unsigned char> (k >> 8);
+  iv[COLUMN_ID_LENGTH + 1] = static_cast<unsigned char> (k);
   modifyIvForStripe(stripeIndex, iv);
 }
 
