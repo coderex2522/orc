@@ -57,6 +57,7 @@ DIAGNOSTIC_PUSH
     WriterMetrics* metrics;
     std::unique_ptr<Cipher> cipher;
 
+    inline void flush(const char* data, uint64_t size);
   public:
     BufferedOutputStream(MemoryPool& pool,
                       OutputStream * outStream,

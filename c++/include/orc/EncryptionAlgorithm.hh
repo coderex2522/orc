@@ -29,8 +29,8 @@ private:
     int ivLength;
 
 public:
-    static const EncryptionAlgorithm* AES_CTR_NOPADDING_128();
-    static const EncryptionAlgorithm* AES_CTR_NOPADDING_256();
+    static const EncryptionAlgorithm* AES_CTR_128();
+    static const EncryptionAlgorithm* AES_CTR_256();
 
     EncryptionAlgorithm(int keyLength_, int ivLength_) :
                         keyLength(keyLength_), ivLength(ivLength_) {

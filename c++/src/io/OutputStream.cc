@@ -100,20 +100,22 @@ namespace orc {
     return dataBuffer->size();
   }
 
+  void BufferedOutputStream::flush(const char* data, uint64_t size) {
+    SCOPED_STOPWATCH(metrics, IOBlockingLatencyUs, IOCount);
+    outputStream->write(data, size);
+  }
+
   uint64_t BufferedOutputStream::flush() {
-    const char* dataPtr = dataBuffer->data();
     uint64_t dataSize = dataBuffer->size();
     if (cipher != nullptr) {
       cipher->encrypt(*dataBuffer, *encryptedDataBuffer);
-      dataPtr = encryptedDataBuffer->data();
       dataSize = encryptedDataBuffer->size();
-    }
-    {
-      SCOPED_STOPWATCH(metrics, IOBlockingLatencyUs, IOCount);
-      outputStream->write(dataPtr, dataSize);
+      flush(encryptedDataBuffer->data(), dataSize);
+      encryptedDataBuffer->resize(0);
+    } else {
+      flush(dataBuffer->data(), dataSize);
     }
     dataBuffer->resize(0);
-    encryptedDataBuffer->resize(0);
     return dataSize;
   }
 

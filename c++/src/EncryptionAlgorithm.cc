@@ -28,14 +28,14 @@
 
 namespace orc {
 
-const EncryptionAlgorithm* EncryptionAlgorithm::AES_CTR_NOPADDING_128() {
+const EncryptionAlgorithm* EncryptionAlgorithm::AES_CTR_128() {
   static EncryptionAlgorithm encryptionAlgorithm(
       CryptoUtils::AES_CTR_128_KEY_LENGTH,
       CryptoUtils::IV_LENGTH);
   return &encryptionAlgorithm;
 }
 
-const EncryptionAlgorithm* EncryptionAlgorithm::AES_CTR_NOPADDING_256() {
+const EncryptionAlgorithm* EncryptionAlgorithm::AES_CTR_256() {
   static EncryptionAlgorithm encryptionAlgorithm(
       CryptoUtils::AES_CTR_256_KEY_LENGTH,
       CryptoUtils::IV_LENGTH);
@@ -143,19 +143,19 @@ void AesCtr128Cipher::encrypt(const DataBuffer<char>& input,
 }
 
 std::unique_ptr<Cipher> Cipher::createInstance(const EncryptionOptions& options) {
-  if (options.type == EncryptionAlgorithm::AES_CTR_NOPADDING_128()) {
+  if (options.type == EncryptionAlgorithm::AES_CTR_128()) {
     if (options.key.size() !=
-        EncryptionAlgorithm::AES_CTR_NOPADDING_128()->getKeyLength()) {
+        EncryptionAlgorithm::AES_CTR_128()->getKeyLength()) {
       throw std::logic_error("AES_CTR_128 key length invalid.");
     }
     if (options.iv.size() !=
-        EncryptionAlgorithm::AES_CTR_NOPADDING_128()->getIvLength()) {
+        EncryptionAlgorithm::AES_CTR_128()->getIvLength()) {
       throw std::logic_error("AES_CTR_128 iv length invalid.");
     }
     std::unique_ptr<Cipher> cipher(new AesCtr128Cipher(options.key, options.iv));
     cipher->init();
     return std::move(cipher);
-  } else if (options.type == EncryptionAlgorithm::AES_CTR_NOPADDING_256()) {
+  } else if (options.type == EncryptionAlgorithm::AES_CTR_256()) {
     throw NotImplementedYet("EncryptionAlgorithm is not supported yet "
                             "for creating cipher."); 
   }
