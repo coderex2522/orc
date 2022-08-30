@@ -20,6 +20,7 @@
 #include "wrap/gtest-wrapper.h"
 
 #include "MemoryOutputStream.hh"
+#include "EncryptionAlgorithm.hh"
 
 namespace orc {
   TEST(BufferedOutputStream, block_aligned) {
@@ -136,5 +137,35 @@ namespace orc {
     EXPECT_EQ(ps.metadatalength(), ps2.metadatalength());
     EXPECT_EQ(ps.writerversion(), ps2.writerversion());
     EXPECT_EQ(ps.magic(), ps2.magic());
+  }
+
+  TEST(BufferedOutputStream, testEncryption) {
+    MemoryOutputStream memStream(1024);
+    MemoryPool * pool = getDefaultPool();
+
+    uint64_t capacity = 210;
+    uint64_t block = 210;
+    EncryptionOptions options;
+    options.type = EncryptionAlgorithm::AES_CTR_NOPADDING_128();
+    options.key.resize(EncryptionAlgorithm::AES_CTR_NOPADDING_128()->getKeyLength());
+    options.iv.resize(EncryptionAlgorithm::AES_CTR_NOPADDING_128()->getIvLength());
+    for (int i = 0; i < 16; ++i) {
+      options.key[i] = (char)i;
+    }
+    unsigned char* iv = reinterpret_cast<unsigned char*>(const_cast<char*>(options.iv.data()));
+    CryptoUtils::modifyIvForStream(52, StreamKind_DATA, 18, iv);
+    BufferedOutputStream bufStream(
+            *pool, &memStream, capacity, block, nullptr, options);
+
+    void* buffer = nullptr;
+    int bufferSize = 0;
+    bufStream.Next(&buffer, &bufferSize);
+    EXPECT_EQ(bufferSize, 210);
+    char* data = reinterpret_cast<char*>(buffer);
+    for (int i = 0; i < bufferSize; ++i) {
+      data[i] = (char)(i + 3);
+    }
+    bufStream.flush();
+    EXPECT_EQ(memStream.getLength(), 210);
   }
 }

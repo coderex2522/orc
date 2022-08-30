@@ -212,6 +212,7 @@ set(SOURCE_FILES
   ColumnWriter.cc
   Common.cc
   Compression.cc
+  EncryptionAlgorithm.cc
   Exceptions.cc
   Int128.cc
   LzoDecompressor.cc
@@ -244,6 +245,8 @@ target_link_libraries (orc
   orc::snappy
   orc::lz4
   orc::zstd
+  ssl
+  crypto
   ${LIBHDFSPP_LIBRARIES}
   )
 

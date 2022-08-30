@@ -18,6 +18,7 @@
 
 #include "orc/Exceptions.hh"
 #include "OutputStream.hh"
+#include "EncryptionAlgorithm.hh"
 #include "Utils.hh"
 
 #include <sstream>
@@ -33,10 +34,16 @@ namespace orc {
                                     OutputStream * outStream,
                                     uint64_t capacity_,
                                     uint64_t blockSize_,
-                                    WriterMetrics* metrics_)
+                                    WriterMetrics* metrics_,
+                                    const EncryptionOptions& encryptionOptions)
                                     : outputStream(outStream),
                                       blockSize(blockSize_),
                                       metrics(metrics_) {
+    if (encryptionOptions.type != nullptr) {
+      cipher = Cipher::createInstance(encryptionOptions);
+      encryptedDataBuffer.reset(new DataBuffer<char>(pool));
+      encryptedDataBuffer->reserve(capacity_);
+    }
     dataBuffer.reset(new DataBuffer<char>(pool));
     dataBuffer->reserve(capacity_);
   }
@@ -94,12 +101,19 @@ namespace orc {
   }
 
   uint64_t BufferedOutputStream::flush() {
+    const char* dataPtr = dataBuffer->data();
     uint64_t dataSize = dataBuffer->size();
+    if (cipher != nullptr) {
+      cipher->encrypt(*dataBuffer, *encryptedDataBuffer);
+      dataPtr = encryptedDataBuffer->data();
+      dataSize = encryptedDataBuffer->size();
+    }
     {
       SCOPED_STOPWATCH(metrics, IOBlockingLatencyUs, IOCount);
-      outputStream->write(dataBuffer->data(), dataSize);
+      outputStream->write(dataPtr, dataSize);
     }
     dataBuffer->resize(0);
+    encryptedDataBuffer->resize(0);
     return dataSize;
   }
 

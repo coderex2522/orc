@@ -20,6 +20,7 @@
 #define ORC_OUTPUTSTREAM_HH
 
 #include "Adaptor.hh"
+#include "orc/EncryptionAlgorithm.hh"
 #include "orc/OrcFile.hh"
 #include "wrap/zero-copy-stream-wrapper.h"
 
@@ -40,6 +41,7 @@ DIAGNOSTIC_PUSH
   DIAGNOSTIC_IGNORE("-Wunused-private-field")
 #endif
   struct WriterMetrics;
+  class Cipher;
   /**
    * A subclass of Google's ZeroCopyOutputStream that supports output to memory
    * buffer, and flushing to OutputStream.
@@ -50,15 +52,18 @@ DIAGNOSTIC_PUSH
   private:
     OutputStream * outputStream;
     std::unique_ptr<DataBuffer<char> > dataBuffer;
+    std::unique_ptr<DataBuffer<char> > encryptedDataBuffer;
     uint64_t blockSize;
     WriterMetrics* metrics;
+    std::unique_ptr<Cipher> cipher;
 
   public:
     BufferedOutputStream(MemoryPool& pool,
                       OutputStream * outStream,
                       uint64_t capacity,
                       uint64_t block_size,
-                      WriterMetrics* metrics);
+                      WriterMetrics* metrics,
+                      const EncryptionOptions& options = EncryptionOptions());
     virtual ~BufferedOutputStream() override;
 
     virtual bool Next(void** data, int*size) override;
