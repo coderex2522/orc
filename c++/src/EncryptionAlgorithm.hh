@@ -29,15 +29,22 @@ namespace orc {
 
 class Cipher {
 public:
+    static const int ENCRYPT_MODE = 1;
+    static const int DECRYPT_MODE = 2;
+
     virtual ~Cipher();
 
-    virtual void init() = 0;
+    virtual void init(int mode) = 0;
 
     virtual void encrypt(const DataBuffer<char>& input,
                          DataBuffer<char>& encryptedOutput) = 0;
 
+    virtual void decrypt(const DataBuffer<char>& input,
+                         DataBuffer<char>& decryptedOutput) = 0;
+
     static std::unique_ptr<Cipher> createInstance(
-                         const EncryptionOptions& options);
+                         const EncryptionOptions& options,
+                         int mode);
 };
 
 class CryptoUtils {

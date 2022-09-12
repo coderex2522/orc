@@ -40,7 +40,7 @@ namespace orc {
                                       blockSize(blockSize_),
                                       metrics(metrics_) {
     if (encryptionOptions.type != nullptr) {
-      cipher = Cipher::createInstance(encryptionOptions);
+      cipher = Cipher::createInstance(encryptionOptions, Cipher::ENCRYPT_MODE);
       encryptedDataBuffer.reset(new DataBuffer<char>(pool));
       encryptedDataBuffer->reserve(capacity_);
     }

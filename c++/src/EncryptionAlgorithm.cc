@@ -93,9 +93,13 @@ public:
   AesCtr128Cipher(const std::string& key, const std::string& iv);
   ~AesCtr128Cipher();
 
-  void init() override;
+  void init(int mode) override;
+
   void encrypt(const DataBuffer<char>& input,
                DataBuffer<char>& encryptedOutput) override;
+
+  void decrypt(const DataBuffer<char>& input,
+               DataBuffer<char>& decryptedOutput) override;
 
 private:
   EVP_CIPHER_CTX *ctx;
@@ -109,14 +113,23 @@ AesCtr128Cipher::AesCtr128Cipher(const std::string& key_,
   memcpy(iv, iv_.data(), CryptoUtils::IV_LENGTH);
 }
 
-void AesCtr128Cipher::init() {
+void AesCtr128Cipher::init(int mode) {
   ctx = EVP_CIPHER_CTX_new();
   if (ctx == nullptr) {
     throw std::runtime_error("AES_CTR_128 ctx create error");
   }
-  if(!EVP_EncryptInit_ex(ctx, EVP_aes_128_ctr(), NULL, key, iv)) {
-    throw std::runtime_error("AES_CTR_128 init error");
+  if (mode == ENCRYPT_MODE) {
+    if (!EVP_EncryptInit_ex(ctx, EVP_aes_128_ctr(), NULL, key, iv)) {
+      throw std::runtime_error("AES_CTR_128 encrypt init error");
+    }
+  } else if (mode == DECRYPT_MODE) {
+    if (!EVP_DecryptInit_ex(ctx, EVP_aes_128_ctr(), NULL, key, iv)) {
+      throw std::runtime_error("AES_CTR_128 decrypt init error");
+    }
+  } else {
+    throw std::logic_error("Unknown mode type");
   }
+
   /* Disable padding */
   EVP_CIPHER_CTX_set_padding(ctx, 0);
 }
@@ -149,7 +162,32 @@ void AesCtr128Cipher::encrypt(const DataBuffer<char>& input,
   encryptLength += outLength;
 }
 
-std::unique_ptr<Cipher> Cipher::createInstance(const EncryptionOptions& options) {
+
+void AesCtr128Cipher::decrypt(const DataBuffer<char>& input,
+                              DataBuffer<char>& decryptedOutput) {
+  if (input.size() == 0) {
+    return;
+  }
+  decryptedOutput.resize(input.size());
+  const unsigned char* inputPtr =
+    reinterpret_cast<const unsigned char*>(input.data());
+  unsigned char* outputPtr =
+    reinterpret_cast<unsigned char*>(decryptedOutput.data());
+  int outLength = 0;
+  if (!EVP_DecryptUpdate(ctx, outputPtr, &outLength, inputPtr, (int)input.size())) {
+    EVP_CIPHER_CTX_free(ctx);
+    throw std::runtime_error("AES_CTR_128 decrypt data error");
+  }
+  int decryptLength = outLength;
+  if(1 != EVP_DecryptFinal_ex(ctx, outputPtr + outLength, &outLength)) {
+    EVP_CIPHER_CTX_free(ctx);
+    throw std::runtime_error("AES_CTR_128 final decrypt error");
+  }
+  decryptLength += outLength;
+}
+
+std::unique_ptr<Cipher> Cipher::createInstance(const EncryptionOptions& options,
+                                               int mode) {
   if (options.type == EncryptionAlgorithm::AES_CTR_128()) {
     if (options.key.size() !=
         EncryptionAlgorithm::AES_CTR_128()->getKeyLength()) {
@@ -160,7 +198,7 @@ std::unique_ptr<Cipher> Cipher::createInstance(const EncryptionOptions& options)
       throw std::logic_error("AES_CTR_128 iv length invalid.");
     }
     std::unique_ptr<Cipher> cipher(new AesCtr128Cipher(options.key, options.iv));
-    cipher->init();
+    cipher->init(mode);
     return std::move(cipher);
   } else if (options.type == EncryptionAlgorithm::AES_CTR_256()) {
     throw NotImplementedYet("EncryptionAlgorithm is not supported yet "

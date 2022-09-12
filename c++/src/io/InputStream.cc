@@ -141,7 +141,8 @@ namespace orc {
                                                    uint64_t offset,
                                                    uint64_t byteCount,
                                                    MemoryPool& _pool,
-                                                   uint64_t _blockSize
+                                                   uint64_t _blockSize,
+                                                   const EncryptionOptions& options
                                                    ):pool(_pool),
                                                      input(stream),
                                                      start(offset),
@@ -153,6 +154,10 @@ namespace orc {
     position = 0;
     buffer.reset(new DataBuffer<char>(pool));
     pushBack = 0;
+    if (options.type != nullptr) {
+      cipher = Cipher::createInstance(options, Cipher::DECRYPT_MODE);
+      decryptedBuffer.reset(new DataBuffer<char>(pool));
+    }
   }
 
   SeekableFileInputStream::~SeekableFileInputStream() {

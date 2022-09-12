@@ -20,6 +20,7 @@
 #define ORC_INPUTSTREAM_HH
 
 #include "Adaptor.hh"
+#include "EncryptionAlgorithm.hh"
 #include "orc/OrcFile.hh"
 #include "wrap/zero-copy-stream-wrapper.h"
 
@@ -93,15 +94,19 @@ namespace orc {
     const uint64_t length;
     const uint64_t blockSize;
     std::unique_ptr<DataBuffer<char> > buffer;
+    std::unique_ptr<DataBuffer<char> > decryptedBuffer;
     uint64_t position;
     uint64_t pushBack;
+    std::unique_ptr<Cipher> cipher;
+
 
   public:
     SeekableFileInputStream(InputStream* input,
                             uint64_t offset,
                             uint64_t byteCount,
                             MemoryPool& pool,
-                            uint64_t blockSize = 0);
+                            uint64_t blockSize = 0,
+                            const EncryptionOptions& options = EncryptionOptions());
     virtual ~SeekableFileInputStream() override;
 
     virtual bool Next(const void** data, int*size) override;
