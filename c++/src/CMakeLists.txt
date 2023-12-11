@@ -175,9 +175,11 @@ set(SOURCE_FILES
   Compression.cc
   ConvertColumnReader.cc
   CpuInfoUtil.cc
+  DataMask.cc
   Exceptions.cc
   Int128.cc
   LzoDecompressor.cc
+  MaskFactory.cc
   MemoryPool.cc
   Murmur3.cc
   OrcFile.cc
