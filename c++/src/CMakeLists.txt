@@ -156,6 +156,9 @@ set(SOURCE_FILES
   orc_proto.pb.h
   io/InputStream.cc
   io/OutputStream.cc
+  mask/DataMask.cc
+  mask/RedactMask.cc
+  mask/MaskFactory.cc
   sargs/ExpressionTree.cc
   sargs/Literal.cc
   sargs/PredicateLeaf.cc
@@ -175,11 +178,9 @@ set(SOURCE_FILES
   Compression.cc
   ConvertColumnReader.cc
   CpuInfoUtil.cc
-  DataMask.cc
   Exceptions.cc
   Int128.cc
   LzoDecompressor.cc
-  MaskFactory.cc
   MemoryPool.cc
   Murmur3.cc
   OrcFile.cc
